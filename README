@@ -1,0 +1,95 @@
+django-unjoinify
+
+A library for efficiently retrieving deeply-nested data sets
+(for people who aren't afraid of a bit of SQL)
+
+The problem
+-----------
+Suppose you have a website about film festivals. Each festival has many awards,
+and each award has many nominations. A nomination belongs to a movie, and a
+movie can have several directors (in a many-to-many relation). You want to have
+a page listing the full roster of nominated movies at a festival, including
+their directors.
+
+If you do this the naive way (looping over awards, then nominations / movies,
+then directors), you'll end up making lots and lots of little queries. This is
+bad.
+
+select_related won't help you here - it can't follow one-to-many and
+many-to-many relations. (See Django tickets #2238 and #6432.)
+
+The traditional answer is to bite the bullet and drop down to raw SQL at this
+point:
+
+SELECT
+	tinseltown_award.id,
+	tinseltown_award.name,
+	tinseltown_nomination.id AS nomination__id,
+	tinseltown_nomination.ranking AS nomination__ranking,
+	tinseltown_movie.id AS nomination__movie__id,
+	tinseltown_movie.title AS nomination__movie__title,
+	tinseltown_person.id AS nomination__movie__directors__id,
+	tinseltown_person.first_name AS nomination__movie__directors__first_name
+	tinseltown_person.surname AS nomination__movie__directors__surname
+FROM
+	tinseltown_award
+	LEFT JOIN tinseltown_nomination ON (tinseltown_award.id = tinseltown_nomination.award_id)
+	LEFT JOIN tinseltown_movie ON (tinseltown_nomination.movie_id = tinseltown_movie.id)
+	LEFT JOIN tinseltown_movie_directors ON (tinseltown_movie.id = tinseltown_movie_directors.movie_id)
+	LEFT JOIN tinseltown_person ON (tinseltown_movie_directors.person_id = tinseltown_person.id)
+WHERE
+	tinseltown_award.festival_id = ?
+ORDER BY
+	tinseltown_award.name,
+	tinseltown_nomination.ranking
+
+This captures all the data you need for the page in a single query, but there's
+a downside: all you get back is a plain SQL result table, with no access to
+your model objects and their lovingly-crafted methods (think get_absolute_url).
+
+unjoinify to the rescue
+-----------------------
+Provided you've used the double-underscore notation above for your column
+names, and made them match up with your relation names, unjoinify will take
+your query, and through some cunning ORM introspection, reconstruct an object
+tree:
+
+awards = unjoinify(Award, "SELECT tinseltown_award.id...", (festival_id,))
+
+(Here Award is the base class that all the joins are hanging off, and
+festival_id is a parameter to the query.)
+
+Well... almost. Due to limitations of Django's ORM, we can't return a proper
+object tree with the ability to refer to award.nominations and so on. Instead,
+what you get back is an array of (award, nominations) tuples, where nominations
+is itself an array of (nomination, movie, directors) tuples, and directors is
+an array of person objects. This is good enough for iterating through in a
+template, though:
+
+{% for award, nominations in awards %}
+	<h1>{{ award.name }}</h1>
+	<ul>
+		{% for nomination, movie, directors in nominations %}
+			<li>
+				{{ nomination.ranking }}:
+				<a href="{{ movie.get_absolute_url }}">{{ movie.title }}</a>
+				- {% for director in directors %}
+					{{ director.first_name }} {{ director.surname }}
+				{% endfor %}
+			</li>
+		{% endfor %}
+	</ul>
+{% endfor %}
+
+unjoinify will even handle cartesian joins - for example, if a movie had
+multiple studios as well as multiple directors, you could join on both
+relations and have it successfully unpack to a tuple of
+(nomination, movie, directors, studios). You're advised to use this sparingly,
+though - this will result in count(directors) * count(studios) rows being
+returned for each movie, which, depending on your particular use-case, could
+end up being far worse than running separate queries...
+
+Author
+------
+Matt Westcott <matt@west.co.tt>
+http://matt.west.co.tt/ - @westdotcodottt

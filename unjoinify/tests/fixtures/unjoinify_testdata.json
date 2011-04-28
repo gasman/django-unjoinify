@@ -19,7 +19,7 @@
 		"pk": 2,
 		"model": "tests.award",
 		"fields": {
-			"name": "Best Animated Feature",
+			"name": "Best Director",
 			"festival": 1
 		}
 	},
@@ -28,21 +28,176 @@
 		"pk": 1,
 		"model": "tests.movie",
 		"fields": {
-			"name": "The King's Speech"
+			"title": "The King's Speech",
+			"producers": [1,2,3]
 		}
 	},
 	{
 		"pk": 2,
 		"model": "tests.movie",
 		"fields": {
-			"name": "127 Hours"
+			"title": "127 Hours",
+			"producers": [4,5]
 		}
 	},
 	{
 		"pk": 3,
 		"model": "tests.movie",
 		"fields": {
-			"name": "Black Swan"
+			"title": "Black Swan",
+			"producers": [6,7,8]
+		}
+	},
+	{
+		"pk": 4,
+		"model": "tests.movie",
+		"fields": {
+			"title": "True Grit",
+			"producers": [9,10,11]
+		}
+	},
+	
+	{
+		"pk": 1,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 1,
+			"award": 1,
+			"ranking": 1
+		}
+	},
+	{
+		"pk": 2,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 2,
+			"award": 1,
+			"ranking": 2
+		}
+	},
+	{
+		"pk": 3,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 3,
+			"award": 1,
+			"ranking": 3
+		}
+	},
+	{
+		"pk": 4,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 1,
+			"award": 2,
+			"ranking": 1
+		}
+	},
+	{
+		"pk": 5,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 2,
+			"award": 2,
+			"ranking": 2
+		}
+	},
+	{
+		"pk": 6,
+		"model": "tests.nomination",
+		"fields": {
+			"movie": 4,
+			"award": 2,
+			"ranking": 3
+		}
+	},
+	
+	{
+		"pk": 1,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Iain",
+			"surname": "Canning"
+		}
+	},
+	{
+		"pk": 2,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Emile",
+			"surname": "Sherman"
+		}
+	},
+	{
+		"pk": 3,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Gareth",
+			"surname": "Unwin"
+		}
+	},
+	{
+		"pk": 4,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Danny",
+			"surname": "Boyle"
+		}
+	},
+	{
+		"pk": 5,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Christian",
+			"surname": "Colson"
+		}
+	},
+	{
+		"pk": 6,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Scott",
+			"surname": "Franklin"
+		}
+	},
+	{
+		"pk": 7,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Mike",
+			"surname": "Medavoy"
+		}
+	},
+	{
+		"pk": 8,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Brian",
+			"surname": "Oliver"
+		}
+	},
+	{
+		"pk": 9,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Ethan",
+			"surname": "Coen"
+		}
+	},
+	{
+		"pk": 10,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Joel",
+			"surname": "Coen"
+		}
+	},
+	{
+		"pk": 11,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Scott",
+			"surname": "Rudin"
 		}
 	}
 ]

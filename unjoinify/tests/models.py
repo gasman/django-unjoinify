@@ -8,8 +8,14 @@ class Award(models.Model):
 	festival = models.ForeignKey('Festival', related_name = 'awards')
 
 class Movie(models.Model):
-	name = models.CharField(max_length = 200)
+	title = models.CharField(max_length = 200)
+	producers = models.ManyToManyField('Person', related_name = 'movies_produced')
 
 class Nomination(models.Model):
 	movie = models.ForeignKey('Movie', related_name = 'nominations')
 	award = models.ForeignKey('Award', related_name = 'nominations')
+	ranking = models.IntegerField()
+
+class Person(models.Model):
+	first_name = models.CharField(max_length = 30)
+	surname = models.CharField(max_length = 30)

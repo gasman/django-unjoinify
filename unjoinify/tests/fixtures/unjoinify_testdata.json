@@ -1,0 +1,48 @@
+[
+	{
+		"pk": 1,
+		"model": "tests.festival",
+		"fields": {
+			"name": "83rd Academy Awards"
+		}
+	},
+	
+	{
+		"pk": 1,
+		"model": "tests.award",
+		"fields": {
+			"name": "Best Picture",
+			"festival": 1
+		}
+	},
+	{
+		"pk": 2,
+		"model": "tests.award",
+		"fields": {
+			"name": "Best Animated Feature",
+			"festival": 1
+		}
+	},
+	
+	{
+		"pk": 1,
+		"model": "tests.movie",
+		"fields": {
+			"name": "The King's Speech"
+		}
+	},
+	{
+		"pk": 2,
+		"model": "tests.movie",
+		"fields": {
+			"name": "127 Hours"
+		}
+	},
+	{
+		"pk": 3,
+		"model": "tests.movie",
+		"fields": {
+			"name": "Black Swan"
+		}
+	}
+]

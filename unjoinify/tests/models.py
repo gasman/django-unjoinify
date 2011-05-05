@@ -19,3 +19,4 @@ class Nomination(models.Model):
 class Person(models.Model):
 	first_name = models.CharField(max_length = 30)
 	surname = models.CharField(max_length = 30)
+	movies_acted_in = models.ManyToManyField('Movie', related_name = 'actors')

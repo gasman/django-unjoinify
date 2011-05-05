@@ -199,5 +199,23 @@
 			"first_name": "Scott",
 			"surname": "Rudin"
 		}
+	},
+	{
+		"pk": 12,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Colin",
+			"surname": "Firth",
+			"movies_acted_in": [1]
+		}
+	},
+	{
+		"pk": 13,
+		"model": "tests.person",
+		"fields": {
+			"first_name": "Geoffrey",
+			"surname": "Rush",
+			"movies_acted_in": [1]
+		}
 	}
 ]

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from unjoinify.tests.models import Festival, Award
+from unjoinify.tests.models import Festival, Award, Presenter
 from unjoinify import unjoinify
 
 class TestUnjoinify(TestCase):
@@ -57,3 +57,19 @@ class TestUnjoinify(TestCase):
 		(award, nominations, presenter) = awards[1]
 		self.assertEquals("Best Picture", award.name)
 		self.assertEquals("Steven Spielberg", presenter.name)
+	
+	def test_reverse_one_to_one_relation(self):
+		presenters = unjoinify(Presenter, """
+			SELECT
+				tests_presenter.id,
+				tests_presenter.name,
+				tests_award.id AS award__id,
+				tests_award.name AS award__name
+			FROM
+				tests_presenter
+				LEFT JOIN tests_award ON (tests_presenter.id = tests_award.presenter_id)
+		""", ())
+		
+		(presenter, award) = presenters[0]
+		self.assertEquals("Steven Spielberg", presenter.name)
+		self.assertEquals("Best Picture", award.name)

@@ -16,10 +16,12 @@ def recognise_relation_type(model, field_name):
 			return ('field', None)
 	except FieldDoesNotExist:
 		# check reverse relations
-		# TODO: check reverse OneToOne relations
 		for rel in model._meta.get_all_related_objects():
 			if rel.get_accessor_name() == field_name:
-				return ('multiple', rel.model)
+				if isinstance(rel.field, OneToOneField):
+					return ('single', rel.model)
+				else:
+					return ('multiple', rel.model)
 		for rel in model._meta.get_all_related_many_to_many_objects():
 			if rel.get_accessor_name() == field_name:
 				return ('multiple', rel.model)

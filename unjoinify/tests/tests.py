@@ -73,3 +73,22 @@ class TestUnjoinify(TestCase):
 		(presenter, award) = presenters[0]
 		self.assertEquals("Steven Spielberg", presenter.name)
 		self.assertEquals("Best Picture", award.name)
+	
+	def test_overriding_column_names(self):
+		festivals = unjoinify(Festival, """
+			SELECT
+				tests_festival.id AS arbitrary_name_1,
+				tests_festival.name AS arbitrary_name_2,
+				tests_award.id AS arbitrary_name_3,
+				tests_award.name AS arbitrary_name_4
+			FROM
+				tests_festival
+				LEFT JOIN tests_award ON (tests_festival.id = tests_award.festival_id)
+			ORDER BY
+				tests_festival.name,
+				tests_award.name
+		""", columns = ["id", "name", "awards__id", "awards__name"])
+		
+		(festival, awards) = festivals[0]
+		self.assertEquals("83rd Academy Awards", festival.name)
+		self.assertEquals("Best Director", awards[0].name)

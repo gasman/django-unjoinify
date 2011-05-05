@@ -20,7 +20,9 @@ class TestUnjoinify(TestCase):
 				producer.surname AS nominations__movie__producers__surname,
 				actor.id AS nominations__movie__actors__id,
 				actor.first_name AS nominations__movie__actors__first_name,
-				actor.surname AS nominations__movie__actors__surname
+				actor.surname AS nominations__movie__actors__surname,
+				tests_presenter.id AS presenter__id,
+				tests_presenter.name AS presenter__name
 			FROM
 				tests_award
 				LEFT JOIN tests_nomination ON (tests_award.id = tests_nomination.award_id)
@@ -29,6 +31,7 @@ class TestUnjoinify(TestCase):
 				LEFT JOIN tests_person AS producer ON (tests_movie_producers.person_id = producer.id)
 				LEFT JOIN tests_person_movies_acted_in ON (tests_person_movies_acted_in.movie_id = tests_movie.id)
 				LEFT JOIN tests_person AS actor ON (tests_person_movies_acted_in.person_id = actor.id)
+				LEFT JOIN tests_presenter ON (tests_award.presenter_id = tests_presenter.id)
 			WHERE
 				tests_award.festival_id = %s
 			ORDER BY
@@ -38,9 +41,10 @@ class TestUnjoinify(TestCase):
 				actor.surname
 		""", (1,))
 		
-		(award, nominations) = awards[0]
+		(award, nominations, presenter) = awards[0]
 		self.assertEquals("Best Director", award.name)
 		self.assertEquals(3, len(nominations))
+		self.assertEquals(None, presenter)
 		
 		(nomination, movie, producers, actors) = nominations[0]
 		self.assertEquals(1, nomination.ranking)
@@ -49,3 +53,7 @@ class TestUnjoinify(TestCase):
 		self.assertEquals("Canning", producers[0].surname)
 		self.assertEquals(2, len(actors))
 		self.assertEquals("Firth", actors[0].surname)
+		
+		(award, nominations, presenter) = awards[1]
+		self.assertEquals("Best Picture", award.name)
+		self.assertEquals("Steven Spielberg", presenter.name)

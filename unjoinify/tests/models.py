@@ -6,6 +6,11 @@ class Festival(models.Model):
 class Award(models.Model):
 	name = models.CharField(max_length = 200)
 	festival = models.ForeignKey('Festival', related_name = 'awards')
+	presenter = models.OneToOneField('Presenter', related_name = 'award', null = True)
+
+# Okay, this is a slightly spurious use of OneToOneField, but how else are you going to work one in? :-)
+class Presenter(models.Model):
+	name = models.CharField(max_length = 200)
 
 class Movie(models.Model):
 	title = models.CharField(max_length = 200)

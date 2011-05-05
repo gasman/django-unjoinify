@@ -1,15 +1,14 @@
 from django.db.models.fields import FieldDoesNotExist
-from django.db.models.fields.related import ForeignKey, ManyToManyField
+from django.db.models.fields.related import ForeignKey, ManyToManyField, OneToOneField
 from django.db import connection
 import itertools
 
 # given a model class and a field name, determine whether the field is a regular field on the model,
 # a relation with a single object on the other end, or a relation with multiple objects on the other end
 def recognise_relation_type(model, field_name):
-	# TODO: check one-to-one fields in both directions
 	try:
 		field = model._meta.get_field(field_name)
-		if isinstance(field, ForeignKey):
+		if isinstance(field, ForeignKey) or isinstance(field, OneToOneField): # OneToOneField is a subclass of ForeignKey anyway, but best not to rely on that
 			return ('single', field.rel.to)
 		elif isinstance(field, ManyToManyField):
 			return ('multiple', field.rel.to)
@@ -17,6 +16,7 @@ def recognise_relation_type(model, field_name):
 			return ('field', None)
 	except FieldDoesNotExist:
 		# check reverse relations
+		# TODO: check reverse OneToOne relations
 		for rel in model._meta.get_all_related_objects():
 			if rel.get_accessor_name() == field_name:
 				return ('multiple', rel.model)

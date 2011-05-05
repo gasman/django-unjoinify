@@ -25,7 +25,9 @@ def recognise_relation_type(model, field_name):
 				return ('multiple', rel.model)
 		raise FieldDoesNotExist('%s has no field named %r' % (model._meta.object_name, field_name))
 
-def make_unpack_plan(model, columns, prefix = '', plan = []):
+def make_unpack_plan(model, columns, prefix = '', plan = None):
+	if plan == None:
+		plan = []
 	field_map = {
 		'model': model,
 		'fields': {}

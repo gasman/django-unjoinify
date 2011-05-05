@@ -55,7 +55,7 @@ def make_unpack_plan(model, columns, prefix = '', plan = None):
 				)
 	return plan
 
-def unjoinify(model, query, query_params, columns = None):
+def unjoinify(model, query, query_params = (), columns = None):
 	cursor = connection.cursor()
 	cursor.execute(query, query_params)
 	if not columns:

@@ -68,7 +68,7 @@ class TestUnjoinify(TestCase):
 			FROM
 				tests_presenter
 				LEFT JOIN tests_award ON (tests_presenter.id = tests_award.presenter_id)
-		""", ())
+		""")
 		
 		(presenter, award) = presenters[0]
 		self.assertEquals("Steven Spielberg", presenter.name)

@@ -89,6 +89,17 @@ though - this will result in count(directors) * count(studios) rows being
 returned for each movie, which, depending on your particular use-case, could
 end up being far worse than running separate queries...
 
+Explicit column names
+---------------------
+Unfortunately, database engines are liable to have a fairly low limit on column
+name length (63 characters, in the case of Postgres), and it's easy to run into
+this limit when working with deeply-nested relations. To work around this, you
+can pass the list of column names as an additional parameter (in the same order
+that they appear in the query):
+
+awards = unjoinify(Award, sql, (festival_id,),
+	columns = ['id', 'name', 'nomination__id', 'nomination__ranking', 'nomination__movie__id', 'nomination__movie__title'])
+
 Author
 ------
 Matt Westcott <matt@west.co.tt>
